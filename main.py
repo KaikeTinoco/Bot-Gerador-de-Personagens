@@ -13,7 +13,7 @@ with open("data/LivroJogador.md", "r", encoding="utf-8") as f:
     livroJogador = f.read()
 
 
-def criarHistoria(descrição):
+def criarPersonagem(descrição):
      response = client.models.generate_content(
          model="gemini-2.0-flash",
          contents=[livroJogador, instrucoes, descrição, "Com base nos dados enviados, leia as instruções e o livro do jogador e gere um personagem para o usuário"]
