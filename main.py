@@ -46,23 +46,12 @@ def criarPersonagem(descrição, campanhaId):
 
   
 
-def fichaRecusada(descricao, personagem):
-        while True:
-            #Primeiro a API busca o personagem que vai ser alterado
+def alterarFicha(descricao, personagemNome, campanhaNome):
+            personagem = api_client.buscarPersonagem(campanhaNome, personagemNome)
             response = chat.send_message(f"Você é um bot gerador de personagens para rpg, o usuário quer fazer a seguinte alteração {descricao}, no seguinte personagem {personagem}. leia os arquivos {[livroJogador, instrucoes]} e faça as alterações desejadas" )
-            print(response.text)
-            #a variavel 'response' é enviada a API para então o usuário e ele valida 
-            #se for validado, o personagem é atualizado no banco e o loop quebra
-            #para teste, vou aprovar a alteração
-            feedbackUser = True
-            if (feedbackUser == True):
-                #salva o pesonagem
-                break
+            print(extrair_json_de_markdown(response.text))
+            api_client.atualizarPersonagem(campanhaNome, extrair_json_de_markdown(response.text))
 
-prompt = '''Dante, um dono de uma nova cafeteria chamada Grillbys, é um humano com descendência anã (mas ainda não descobriu) de tamanho normal (1.75m) com um corpo visivelmente forte, mas que esconde os musculos por baixo de uma camada de gordura,
- que é o barista e cozinheiro da cafeteteria. Ele tem 25 anos e além de trabalhar no Grillbys, esta tentando aprender a ser um ferreiro especializado nas novas tecnologias que estão surgindo e gosta de praticar lutas com alguns de seus clientes que são aventureiros ou mercenários; 
-Ele trabalha sozinho no Grillbys e gosta de cozinhar e fazer bebidas para seus clientes, além de conversar e interagir com os clientes mais proximos, é amado por todos seus clientes. Dante acredita que pode ajudar os outros dando um bom alimento e bebida,
-junto de um ouvido amigo para ouvir o próximo e ama o que faz, mas sente um leve disconforto na sua vida atual pois acha que não é tão relevante ou famoso. Dante será mais focado em defesa e suporte, mas ainda com potencial de causar dano caso necessário.
-faça ele no nível 3 '''
 
-criarPersonagem(prompt, 7)
+
+alterarFicha("altere o nome dele para Jackson", "Edward", "Engrenagens da Ascensao: Uma Saga Steampunk")
