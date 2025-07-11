@@ -37,7 +37,7 @@ def criarPersonagem(descricao):
     geral = data_splitter.fazer_busca(pergunta)
     classes = f"qual a melhor classe e sublasse para criar um personagem com a seguinte descrição? {descricao}"
     classes_resposta = data_splitter.fazer_busca(classes)
-    habilidades = f"qual as melhores habilidades e magias para criar um personagem com a seguinte descrição? {descricao} "
+    habilidades = f"qual as melhores habilidades e magias para criar um personagem com a seguinte descrição? {descricao}"
     habilidades_resposta = data_splitter.fazer_busca(habilidades)
     equipamentos = f"quais os melhores equipamentos para criar um personagem com a seguinte descrição? {descricao}"
     equipamentos_resposta = data_splitter.fazer_busca(equipamentos)
@@ -49,6 +49,27 @@ def criarPersonagem(descricao):
     response = client.models.generate_content(
         model="gemini-2.0-flash",
         contents=[dados_text, instrucoes, descricao,"Com base nos dados enviados, leia as instruções e o livro do jogador e gere um personagem para o usuário"]
+    )
+    print(extrair_json_de_markdown(response.text))
+    return extrair_json_de_markdown(response.text)
+
+def criarNpc(descricao):
+    pergunta = interpretador.fazer_pergunta(f"o jogador quer criar um NPC com a seguinte descrição {descricao}")
+    geral = data_splitter.fazer_busca(pergunta)
+    classes = f"qual a melhor classe e sublasse para criar um NPC com a seguinte descrição? {descricao}"
+    classes_resposta = data_splitter.fazer_busca(classes)
+    habilidades = f"qual as melhores habilidades e magias para criar um NPC com a seguinte descrição? {descricao}"
+    habilidades_resposta = data_splitter.fazer_busca(habilidades)
+    equipamentos = f"quais os melhores equipamentos para criar um NPC com a seguinte descrição? {descricao}"
+    equipamentos_resposta = data_splitter.fazer_busca(equipamentos)
+    dados = [geral, classes_resposta, habilidades_resposta, equipamentos_resposta]
+    dados_text = []
+    for documento in dados:
+        dados_temp = "\n\n".join([doc.page_content for doc in documento])
+        dados_text.append(dados_temp)
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[dados_text, instrucoes, descricao,"Com base nos dados enviados, leia as instruções e o livro do jogador e gere um NPC para o usuário"]
     )
     print(extrair_json_de_markdown(response.text))
     return extrair_json_de_markdown(response.text)
